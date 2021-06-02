@@ -128,6 +128,15 @@ def LoadFromSCO_Object(file, context, op, filepath):
 		i += 1
 		
 		face.smooth = True
+		
+	scoObj.location.x = central_point[0]
+	scoObj.location.y = central_point[2]
+	scoObj.location.z = central_point[1]
+	
+	for v in bm.verts:
+		v.co.x -= scoObj.location.x
+		v.co.y -= scoObj.location.y
+		v.co.z -= scoObj.location.z
 
 	bm.to_mesh(scoMesh)
 	scoMesh.update()
