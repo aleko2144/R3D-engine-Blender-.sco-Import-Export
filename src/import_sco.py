@@ -18,6 +18,25 @@ import re
 
 import bmesh
 	
+def countGlobalPosition(coords1, coords2):
+	result = [0.0, 0.0, 0.0]
+	if (coords1[0] <= 0):
+		result[0] = coords1[0] - coords2[0]
+	else:
+		result[0] = coords1[0] + coords2[0]
+		
+	if (coords1[1] <= 0):
+		result[1] = coords1[1] - coords2[1]
+	else:
+		result[1] = coords1[1] + coords2[1]
+		
+	if (coords1[2] <= 0):
+		result[2] = coords1[2] - coords2[2]
+	else:
+		result[2] = coords1[2] + coords2[2]
+	
+	return result
+	
 def LoadFromSCO_Object(file, context, op, filepath):
 	sco_lines = file.readlines()
 	
@@ -53,7 +72,8 @@ def LoadFromSCO_Object(file, context, op, filepath):
 	for i in range(num_verts):
 		test_str_strip = sco_lines[i + iter].strip()
 		temp_vector = test_str_strip.strip().split(sep = ' ')
-		verts_data.append((float(temp_vector[0]), float(temp_vector[1]), float(temp_vector[2])))
+		
+		verts_data.append((float(temp_vector[0]), float(temp_vector[2]), float(temp_vector[1])))
 		
 	iter += num_verts
 	
@@ -128,7 +148,7 @@ def LoadFromSCO_Object(file, context, op, filepath):
 		i += 1
 		
 		face.smooth = True
-		
+
 	scoObj.location.x = central_point[0]
 	scoObj.location.y = central_point[2]
 	scoObj.location.z = central_point[1]
@@ -137,7 +157,25 @@ def LoadFromSCO_Object(file, context, op, filepath):
 		v.co.x -= scoObj.location.x
 		v.co.y -= scoObj.location.y
 		v.co.z -= scoObj.location.z
-
+	
+	"""
+	for v in bm.verts:
+		if (v.co.x <= 0):
+			v.co.x += scoObj.location.x
+		else:
+			v.co.x -= scoObj.location.x
+			
+		if (v.co.y <= 0):
+			v.co.y += scoObj.location.y
+		else:
+			v.co.y -= scoObj.location.y
+			
+		if (v.co.z <= 0):
+			v.co.z += scoObj.location.z
+		else:
+			v.co.z -= scoObj.location.z
+	"""
+	
 	bm.to_mesh(scoMesh)
 	scoMesh.update()
 
