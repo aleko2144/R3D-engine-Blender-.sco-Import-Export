@@ -73,19 +73,11 @@ class ExportSCO(bpy.types.Operator, ImportHelper):
     filename_ext = '.sco'
     filter_glob: StringProperty(default='*.sco', options={'HIDDEN'})
 
-    generate_pro_file: BoolProperty(name='Generate pro-file',
-                        description='Generate .pro file, which can usedto assembly the resources file', default=False)
-									
-    textures_path: StringProperty(
-        name="Textures directory",
-        default="txr\\",
-        )
-
     def execute(self, context):
         from . import export_sco
         print('Exporting file', self.filepath)
         t = time.mktime(datetime.datetime.now().timetuple())
-        export_sco.write(self.filepath+'.sco', context, self, self.filepath, self.generate_pro_file, self.textures_path)
+        export_sco.write(context, self, self.filepath)
         t = time.mktime(datetime.datetime.now().timetuple()) - t
         print('Finished exporting in', t, 'seconds')
         return {'FINISHED'}
